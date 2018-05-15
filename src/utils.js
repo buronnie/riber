@@ -50,3 +50,7 @@ export function typeNumber(data) {
   let a = numberMap[__type.call(data)];
   return a || 8;
 }
+
+export function isValidRoot(root) {
+  return root && root.appendChild;
+}

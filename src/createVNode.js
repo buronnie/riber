@@ -1,6 +1,6 @@
-import { REACT_ELEMENT_TYPE } from './const.js';
-import { typeNumber } from './utils.js';
-import { Renderer } from './createRenderer.js';
+import { REACT_ELEMENT_TYPE } from './const';
+import { typeNumber } from './utils';
+import { Renderer } from './renderer';
 
 const RESERVED_PROPS = {
   key: true,
@@ -75,7 +75,7 @@ function createVNode(type, tag, props, key, ref, owner) {
   return ret;
 }
 
-// Public API
+// Public API to create virtual dom nodes
 export function createElement(type, config, ...children) {
   const tag = createTag(type);
   config = config || {};
