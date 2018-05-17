@@ -33,6 +33,9 @@ export default {
             browsers: ['last 2 versions', 'IE >= 9']
           }
         }]
+      ],
+      plugins: [
+        'external-helpers'
       ]
     })
   ],

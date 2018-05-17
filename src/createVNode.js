@@ -75,6 +75,14 @@ function createVNode(type, tag, props, key, ref, owner) {
   return ret;
 }
 
+export function createVText(text) {
+  return {
+    type: '#text',
+    tag: 6,
+    props: { children: text },
+  };
+}
+
 // Public API to create virtual dom nodes
 export function createElement(type, config, ...children) {
   const tag = createTag(type);

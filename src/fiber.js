@@ -27,6 +27,10 @@ export class Fiber {
       this.updateQueue.pendingCbs.push(callback);
     }
   }
+
+  isHostComponent() {
+    return this.tag >= 3;   
+  }
 }
 
 export function createRootFiber(root) {
