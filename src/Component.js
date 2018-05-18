@@ -8,13 +8,6 @@ const fakeObject = {
   enqueueSetState: returnFalse,
 };
 
-export function updateComponent(instance, state) {
-  const fiber = getFiberFromInstance(instance);
-  Renderer.macrotasks.push(fiber);
-  fiber.mergeUpdate(state);
-  scheduleWork();
-}
-
 export default class Component {
   constructor(props, context) {
     Renderer.currentOwner = this;
@@ -47,4 +40,11 @@ export default class Component {
   render() {
     throw 'must implement render';
   }
+}
+
+export function updateComponent(instance, state) {
+  const fiber = getFiberFromInstance(instance);
+  Renderer.macrotasks.push(fiber);
+  fiber.mergeUpdate(state);
+  scheduleWork();
 }

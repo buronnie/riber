@@ -13,14 +13,14 @@ function traverseAllChildren(children, prefix, index) {
   
   if (type === 3 || type === 4) {
     if (lastText) {
-      lastText.props.children += children;
+      flattenObject[lastKey].props.children += children;
     } else {
-      lastKey = prefix + index;
+      lastKey = (prefix + index) || '.0';
       lastText = createVText(children);
+      flattenObject[lastKey] = lastText;
     }
   } else {
     if (lastText) {
-      flattenObject[lastKey] = lastText;
       lastKey = lastText = null;
     }
     if (type === 7) {
@@ -29,11 +29,10 @@ function traverseAllChildren(children, prefix, index) {
         traverseAllChildren(child, prefix, i);
       });
       if (lastText) {
-        flattenObject[lastKey] = lastText;
         lastKey = lastText = null;
       }
     } else {
-      flattenObject[prefix + index] = children;
+      flattenObject[(prefix + index) || '.0'] = children;
     }
   }
 }
@@ -42,16 +41,17 @@ function fiberizeChildren(children, fiber) {
   flattenObject = {};
   lastKey = lastText = null;
   if (children !== void 0) {
-    traverseAllChildren(children, '#', 0);
+    traverseAllChildren(children, '', '');
   }
+  fiber.children = extend({}, flattenObject);
   flattenObject = {};
   lastKey = lastText = null;
-  return fiber.children = flattenObject;
+  return fiber.children;
 }
 
 function diff(parent, children) {
   const oldFibers = parent.children || {};
-  const newFibers = fiberizeChildren(children);
+  const newFibers = fiberizeChildren(children, parent);
 
   parent.child = null;
   let prevFiber = null;
@@ -89,6 +89,13 @@ function updateClassComponent(fiber) {
   }
 
   // TODO: apply before update hooks
+  let state = fiber.state || instance.state;
+  let nextState = extend({}, state);
+  fiber.updateQueue.pendingStates.forEach((pendingState) => {
+    nextState = extend(nextState, pendingState);
+  });
+  fiber.memoizedState = nextState;
+  instance.state = nextState;
 
   const rendered = instance.render();
   diff(fiber, rendered);

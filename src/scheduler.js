@@ -20,7 +20,7 @@ function workLoop(deadline) {
 }
 
 function performWork() {
-  workLoop();
+  workLoop(1);
 }
 
 export function scheduleWork() {
